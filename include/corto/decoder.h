@@ -31,11 +31,20 @@ If not, see <http://www.gnu.org/licenses/>.
 #include "color_attribute.h"
 #include "normal_attribute.h"
 
+
+// If compiling with Visual Studio
+#if defined(_MSC_VER)
+#define EXPORT_API __declspec(dllexport)
+#else
+// Other platforms don't need this
+#define EXPORT_API
+#endif
+
 namespace crt {
 
 
 
-class Decoder {
+class EXPORT_API Decoder {
 public:
 	uint32_t nvert, nface;
 	std::map<std::string, std::string> exif; //mtllib ...,

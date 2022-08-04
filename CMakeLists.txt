@@ -54,6 +54,7 @@ else()
 endif()
 
 ADD_LIBRARY(corto STATIC ${LIB_SOURCES} ${LIB_HEADERS})
+ADD_LIBRARY(corto_dll SHARED ${LIB_SOURCES} ${LIB_HEADERS})
 
 SET(CORTOLIB_CFLAGS ${CORTO_CFLAGS})
 
@@ -73,6 +74,22 @@ target_include_directories(corto PRIVATE ${CORTO_HEADER_PATH})
 target_compile_definitions(corto PUBLIC ${CORTO_DEFINITIONS})
 target_compile_options    (corto PUBLIC ${CORTOLIB_CFLAGS})
 set_target_properties     (corto PROPERTIES DEBUG_POSTFIX "d")
+
+target_include_directories(corto_dll PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(corto_dll PRIVATE ${CORTO_HEADER_PATH})
+
+target_compile_definitions(corto_dll PUBLIC ${CORTO_DEFINITIONS})
+target_compile_options    (corto_dll PUBLIC ${CORTOLIB_CFLAGS})
+set_target_properties     (corto_dll PROPERTIES DEBUG_POSTFIX "d")
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+	# G++
+	target_compile_options(corto_dll PRIVATE -Wall -Wextra)
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+	# MSVC
+	target_compile_options(corto_dll PRIVATE /EHsc /MTd /W2 /c)
+	# Set the DLLEXPORT variable to export symbols
+	target_compile_definitions(corto_dll PRIVATE WIN_EXPORT)
+endif()
 
 INSTALL(TARGETS corto
 	RUNTIME DESTINATION bin
