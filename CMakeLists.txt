@@ -56,6 +56,21 @@ endif()
 ADD_LIBRARY(corto STATIC ${LIB_SOURCES} ${LIB_HEADERS})
 ADD_LIBRARY(corto_dll SHARED ${LIB_SOURCES} ${LIB_HEADERS})
 
+if (IOS)
+set_target_properties(corto PROPERTIES
+	FRAMEWORK TRUE
+	FRAMEWORK_VERSION C
+	MACOSX_FRAMEWORK_IDENTIFIER com.evercoast.corto
+#	MACOSX_FRAMEWORK_INFO_PLIST Info.plist
+	# "current version" in semantic format in Mach-O binary file
+	VERSION 16.4.0
+	# "compatibility version" in semantic format in Mach-O binary file
+	SOVERSION 1.0.0
+	PUBLIC_HEADER "${LIB_HEADERS}"
+	XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer"
+)
+endif()
+
 SET(CORTOLIB_CFLAGS ${CORTO_CFLAGS})
 
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
@@ -64,7 +79,7 @@ elseif(APPLE)
 	LIST(APPEND CORTOLIB_CFLAGS -fvisibility=hidden)
 	if(IOS)
 		LIST(APPEND CORTOLIB_CFLAGS -fembed-bitcode)
-		set_xcode_property(corto IPHONEOS_DEPLOYMENT_TARGET "9.2")
+		SET(XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 9.2)
 	endif(IOS)
 endif()
 
@@ -95,7 +110,8 @@ INSTALL(TARGETS corto
 	RUNTIME DESTINATION bin
 	BUNDLE DESTINATION bin
 	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib)
+	ARCHIVE DESTINATION lib
+	FRAMEWORK DESTINATION framework)
 
 INSTALL(FILES
 	${CORTO_HEADER_PATH}/bitstream.h
@@ -130,7 +146,7 @@ if (BUILD_CORTO_EXE)
 	SET(CORTOEXE_CFLAGS ${CORTO_CFLAGS})
 	if(APPLE)
 		if(IOS)
-			set_xcode_property(cortoexe IPHONEOS_DEPLOYMENT_TARGET "9.2")
+			SET(XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 9.2)
 		endif()
 	endif()
 	target_include_directories(cortoexe PUBLIC ${CORTO_HEADER_PATH})
