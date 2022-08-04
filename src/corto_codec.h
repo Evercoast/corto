@@ -9,7 +9,7 @@
 #define EXPORT_API __declspec(dllexport)
 #else
 // Other platforms don't need this
-#define EXPORT_API
+#define EXPORT_API __attribute__((__visibility__("default")))
 #endif
 
 namespace crt
