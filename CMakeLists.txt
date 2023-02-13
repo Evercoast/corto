@@ -4,6 +4,19 @@ project(corto)
 option(BUILD_CORTO_CODEC_UNITY "Build the unity codec shared library of corto" ON)
 option(BUILD_CORTO_EXE "Build the command line binary of corto" ON)
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+	# Essential to get to work with Unreal which also uses libc++
+	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -stdlib=libc++")
+	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -stdlib=libc++")
+endif()
+
 set (CMAKE_CXX_STANDARD 11)
 
 SET(CORTO_SOURCE_PATH src)
@@ -52,7 +65,7 @@ if(MSVC)
 	SET(CORTO_CFLAGS /nologo /W3)
 	LIST(APPEND CORTO_DEFINITIONS _CRT_SECURE_NO_DEPRECATE)
 else()
-	SET(CORTO_CFLAGS -O2 -W -Wall -c -std=c++11 -pedantic)
+	SET(CORTO_CFLAGS -W -Wall -c -pedantic)
 endif()
 
 ADD_LIBRARY(corto STATIC ${LIB_SOURCES} ${LIB_HEADERS})
