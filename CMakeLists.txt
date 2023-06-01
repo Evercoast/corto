@@ -1,4 +1,10 @@
 cmake_minimum_required(VERSION 3.1)
+
+if (UNIX)
+	set(CMAKE_C_COMPILER "/usr/bin/clang")
+	set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+endif()
+
 project(corto)
 
 option(BUILD_CORTO_CODEC_UNITY "Build the unity codec shared library of corto" ON)
@@ -103,20 +109,28 @@ endif()
 
 target_include_directories(corto PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(corto PRIVATE ${CORTO_HEADER_PATH})
+target_compile_definitions(corto PUBLIC ${CORTO_DEFINITIONS})
+target_compile_options    (corto PUBLIC ${CORTOLIB_CFLAGS})
 set_target_properties     (corto PROPERTIES DEBUG_POSTFIX "d")
 
 target_include_directories(corto_dll PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(corto_dll PRIVATE ${CORTO_HEADER_PATH})
-
 target_compile_definitions(corto_dll PUBLIC ${CORTO_DEFINITIONS})
 target_compile_options    (corto_dll PUBLIC ${CORTOLIB_CFLAGS})
 set_target_properties     (corto_dll PROPERTIES DEBUG_POSTFIX "d")
+
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 	# G++
 	target_compile_options(corto_dll PRIVATE -Wall -Wextra)
+	target_compile_options(corto PRIVATE -Wall -Wextra)
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+	# Clang
+	target_compile_options(corto_dll PRIVATE -Wall -Wextra)
+	target_compile_options(corto PRIVATE -Wall -Wextra)
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 	# MSVC
 	target_compile_options(corto_dll PRIVATE /EHsc /MTd /W2 /c)
+	target_compile_options(corto PRIVATE /EHsc /MTd /W2 /c)
 	# Set the DLLEXPORT variable to export symbols
 	target_compile_definitions(corto_dll PRIVATE WIN_EXPORT)
 endif()
