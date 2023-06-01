@@ -17,10 +17,12 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -stdlib=libc++")
 endif()
 
-set (CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+SET(CMAKE_CXX_EXTENSIONS OFF)
 
-SET(CORTO_SOURCE_PATH src)
-SET(CORTO_HEADER_PATH include/corto)
+SET(CORTO_SOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src)
+SET(CORTO_HEADER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include/corto)
 
 SET(LIB_HEADERS
 	${CORTO_HEADER_PATH}/bitstream.h
@@ -62,10 +64,9 @@ SET(CORTO_DEFINITIONS "")
 SET(IOS_DEPLOYMENT_TARGET "9.2")
 
 if(MSVC)
-	SET(CORTO_CFLAGS /nologo /W3)
-	LIST(APPEND CORTO_DEFINITIONS _CRT_SECURE_NO_DEPRECATE)
+	add_compile_options(/nologo /W3 -D_CRT_SECURE_NO_DEPRECATE)
 else()
-	SET(CORTO_CFLAGS -W -Wall -c -pedantic)
+	add_compile_options(-Wall -pedantic)
 endif()
 
 ADD_LIBRARY(corto STATIC ${LIB_SOURCES} ${LIB_HEADERS})
@@ -102,9 +103,6 @@ endif()
 
 target_include_directories(corto PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(corto PRIVATE ${CORTO_HEADER_PATH})
-
-target_compile_definitions(corto PUBLIC ${CORTO_DEFINITIONS})
-target_compile_options    (corto PUBLIC ${CORTOLIB_CFLAGS})
 set_target_properties     (corto PROPERTIES DEBUG_POSTFIX "d")
 
 target_include_directories(corto_dll PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -167,9 +165,7 @@ if (BUILD_CORTO_EXE)
 	endif()
 	target_include_directories(cortoexe PUBLIC ${CORTO_HEADER_PATH})
 	target_link_libraries(cortoexe PUBLIC corto)
-
-	target_compile_options    (cortoexe PUBLIC ${CORTOEXE_CFLAGS})
-	set_target_properties     (cortoexe PROPERTIES OUTPUT_NAME "corto")
+	set_target_properties(cortoexe PROPERTIES OUTPUT_NAME "corto")
 
 	INSTALL(TARGETS cortoexe
 		RUNTIME DESTINATION bin
