@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.28.1)
 
 if (UNIX)
 	set(CMAKE_C_COMPILER "/usr/bin/clang")
@@ -21,6 +21,11 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	# Essential to get to work with Unreal which also uses libc++
 	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -stdlib=libc++")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -stdlib=libc++")
+endif()
+
+if("${CMAKE_SYSTEM_NAME}" MATCHES "visionOS")
+	set(VISIONOS TRUE)
+	SET(VISIONOS_DEPLOYMENT_TARGET "1.0")
 endif()
 
 SET(CMAKE_CXX_STANDARD 11)
@@ -92,6 +97,20 @@ set_target_properties(corto_dll PROPERTIES
 	XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer"
 )
 set_target_properties(corto_dll PROPERTIES XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.evercoast.corto")
+elseif(VISIONOS)
+set_target_properties(corto_dll PROPERTIES
+	FRAMEWORK TRUE
+	FRAMEWORK_VERSION C
+	MACOSX_FRAMEWORK_IDENTIFIER com.evercoast.corto
+#	MACOSX_FRAMEWORK_INFO_PLIST Info.plist
+	# "current version" in semantic format in Mach-O binary file
+	VERSION 16.4.0
+	# "compatibility version" in semantic format in Mach-O binary file
+	SOVERSION 1.0.0
+	PUBLIC_HEADER "${LIB_HEADERS}"
+	XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer"
+)
+set_target_properties(corto_dll PROPERTIES XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.evercoast.corto")
 endif()
 
 SET(CORTOLIB_CFLAGS ${CORTO_CFLAGS})
@@ -104,7 +123,11 @@ elseif(APPLE)
 		LIST(APPEND CORTOLIB_CFLAGS -fembed-bitcode)
 		set_target_properties(corto PROPERTIES XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "${IOS_DEPLOYMENT_TARGET}")
 		set_target_properties(corto_dll PROPERTIES XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "${IOS_DEPLOYMENT_TARGET}")
-	endif(IOS)
+	elseif(VISIONOS)
+		LIST(APPEND CORTOLIB_CFLAGS -fembed-bitcode)
+		set_target_properties(corto PROPERTIES XCODE_ATTRIBUTE_VISIONOS_DEPLOYMENT_TARGET "${VISIONOS_DEPLOYMENT_TARGET}")
+		set_target_properties(corto_dll PROPERTIES XCODE_ATTRIBUTE_VISIONOS_DEPLOYMENT_TARGET "${VISIONOS_DEPLOYMENT_TARGET}")
+	endif()
 endif()
 
 target_include_directories(corto PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -175,6 +198,8 @@ if (BUILD_CORTO_EXE)
 	if(APPLE)
 		if(IOS)
 			set_target_properties(cortoexe PROPERTIES XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "${IOS_DEPLOYMENT_TARGET}")
+		elseif(VISIONOS)
+			set_target_properties(cortoexe PROPERTIES XCODE_ATTRIBUTE_VISIONOS_DEPLOYMENT_TARGET "${VISIONOS_DEPLOYMENT_TARGET}")
 		endif()
 	endif()
 	target_include_directories(cortoexe PUBLIC ${CORTO_HEADER_PATH})
