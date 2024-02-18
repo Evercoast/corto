@@ -4,7 +4,7 @@ project(corto)
 option(BUILD_CORTO_CODEC_UNITY "Build the unity codec shared library of corto" ON)
 option(BUILD_CORTO_EXE "Build the command line binary of corto" ON)
 
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 17)
 
 SET(CORTO_SOURCE_PATH src)
 SET(CORTO_HEADER_PATH include/corto)
@@ -22,6 +22,7 @@ SET(LIB_HEADERS
 	${CORTO_HEADER_PATH}/tunstall.h
 	${CORTO_HEADER_PATH}/vertex_attribute.h
 	${CORTO_HEADER_PATH}/zpoint.h
+	${CORTO_HEADER_PATH}/corto_decoder_c.h
 	${CORTO_SOURCE_PATH}/corto_codec.h)
 
 SET(LIB_SOURCES
@@ -32,7 +33,8 @@ SET(LIB_SOURCES
 	${CORTO_SOURCE_PATH}/encoder.cpp
 	${CORTO_SOURCE_PATH}/normal_attribute.cpp
 	${CORTO_SOURCE_PATH}/tunstall.cpp
-	${CORTO_SOURCE_PATH}/corto_codec.cpp)
+	${CORTO_SOURCE_PATH}/corto_codec.cpp
+	${CORTO_SOURCE_PATH}/corto_decoder_c.cpp)
 
 SET(EXE_SOURCE
 	${CORTO_SOURCE_PATH}/main.cpp
