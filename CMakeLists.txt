@@ -16,6 +16,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_STANDARD 17)
 
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 	# Essential to get to work with Unreal which also uses libc++
@@ -73,6 +74,7 @@ SET(LIB_HEADERS
 	${CORTO_HEADER_PATH}/tunstall.h
 	${CORTO_HEADER_PATH}/vertex_attribute.h
 	${CORTO_HEADER_PATH}/zpoint.h
+	${CORTO_HEADER_PATH}/corto_decoder_c.h
 	${CORTO_SOURCE_PATH}/corto_codec.h)
 
 SET(LIB_SOURCES
@@ -83,7 +85,8 @@ SET(LIB_SOURCES
 	${CORTO_SOURCE_PATH}/encoder.cpp
 	${CORTO_SOURCE_PATH}/normal_attribute.cpp
 	${CORTO_SOURCE_PATH}/tunstall.cpp
-	${CORTO_SOURCE_PATH}/corto_codec.cpp)
+	${CORTO_SOURCE_PATH}/corto_codec.cpp
+	${CORTO_SOURCE_PATH}/corto_decoder_c.cpp)
 
 SET(EXE_SOURCE
 	${CORTO_SOURCE_PATH}/main.cpp
