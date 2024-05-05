@@ -15,7 +15,13 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+if (ANDROID)
+    # See this years-old bug in NDK: https://github.com/android/ndk/issues/243
+    set(CMAKE_CXX_FLAGS_RELEASE "-g0 -O3")
+else()
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
