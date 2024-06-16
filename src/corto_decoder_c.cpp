@@ -5,7 +5,7 @@
 * @Author: Ye Feng
 * @Date:   2024-02-17 16:35:49
 * @Last Modified by:   feng_ye
-* @Last Modified time: 2024-02-17 16:48:56
+* @Last Modified time: 2024-06-17 10:17:20
 */
 
 #include "corto_decoder_c.h"
@@ -26,7 +26,9 @@ void *Corto_CreateDecoder(int length, const unsigned char* data, Corto_DecoderIn
  
 void Corto_DestroyDecoder(void* decoder_handler)
 {
-    delete decoder_handler;
+    // Turns out C++ cannot properly delete a void pointer. You have to cast it to something C++-ish
+    Decoder* decoder = (Decoder*)decoder_handler;
+    delete decoder;
 }
 
 int Corto_DecodeMesh(void* decoder_handler, Corto_Vector3* vertices, uint32_t* indices, Corto_Vector3* normals, Corto_Color* colors, Corto_Vector2* texcoord)
