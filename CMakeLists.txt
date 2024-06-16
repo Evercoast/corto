@@ -15,7 +15,13 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+if (ANDROID)
+    # See this years-old bug in NDK: https://github.com/android/ndk/issues/243
+    set(CMAKE_CXX_FLAGS_RELEASE "-g0 -O3")
+else()
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
@@ -117,10 +123,8 @@ set_target_properties(corto_dll PROPERTIES
 	FRAMEWORK_VERSION C
 	MACOSX_FRAMEWORK_IDENTIFIER com.evercoast.corto
 #	MACOSX_FRAMEWORK_INFO_PLIST Info.plist
-	# "current version" in semantic format in Mach-O binary file
-	VERSION 16.4.0
-	# "compatibility version" in semantic format in Mach-O binary file
-	SOVERSION 1.0.0
+	MACOSX_FRAMEWORK_BUNDLE_VERSION 1.0.0
+	MACOSX_FRAMEWORK_SHORT_VERSION_STRING 1.0
 	PUBLIC_HEADER "${LIB_HEADERS}"
 	XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer"
 )
@@ -131,10 +135,8 @@ set_target_properties(corto_dll PROPERTIES
 	FRAMEWORK_VERSION C
 	MACOSX_FRAMEWORK_IDENTIFIER com.evercoast.corto
 #	MACOSX_FRAMEWORK_INFO_PLIST Info.plist
-	# "current version" in semantic format in Mach-O binary file
-	VERSION 16.4.0
-	# "compatibility version" in semantic format in Mach-O binary file
-	SOVERSION 1.0.0
+	MACOSX_FRAMEWORK_BUNDLE_VERSION 1.0.0
+	MACOSX_FRAMEWORK_SHORT_VERSION_STRING 1.0
 	PUBLIC_HEADER "${LIB_HEADERS}"
 	XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer"
 )
