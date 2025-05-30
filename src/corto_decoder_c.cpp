@@ -7,17 +7,6 @@
 * @Last Modified by:   feng_ye
 * @Last Modified time: 2024-06-17 10:17:20
 */
-
-#include <memory>
-// PREVENT HIJACKING??? IT SOMEHOW DOES WORK IN IOS
-void* operator new(std::size_t size) {
-    return std::malloc(size);
-}
-
-void operator delete(void* ptr) noexcept {
-    std::free(ptr);
-}
-
 #include "corto_decoder_c.h"
 #include "decoder.h"
 

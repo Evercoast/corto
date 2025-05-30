@@ -101,7 +101,7 @@ void NormalAttr::quantize(uint32_t nvert, const char *buffer) {
 }
 
 
-void NormalAttr::preDelta(uint32_t nvert,  uint32_t nface, std::map<std::string, VertexAttribute *> &attrs, IndexAttribute &index) {
+void NormalAttr::preDelta(uint32_t nvert,  uint32_t nface, std::map<SimpleString, VertexAttribute *> &attrs, IndexAttribute &index) {
 	if(prediction == DIFF)
 		return;
 
@@ -198,7 +198,7 @@ void NormalAttr::deltaDecode(uint32_t nvert, std::vector<Face> &context) {
 }
 
 void NormalAttr::postDelta(uint32_t nvert, uint32_t nface,
-						   std::map<std::string, VertexAttribute *> &attrs,
+						   std::map<SimpleString, VertexAttribute *> &attrs,
 						   IndexAttribute &index) {
 	if(!buffer) return;
 

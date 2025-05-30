@@ -711,6 +711,7 @@ void Encoder::encodeFaces(int start, int end) {
 		}
 
 		counting++;
+        (void)counting;
 		assert(!visited[opposite_face]);
 		visited[opposite_face] = true;
 		totfaces--;

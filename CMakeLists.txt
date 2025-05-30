@@ -81,7 +81,9 @@ SET(LIB_HEADERS
 	${CORTO_HEADER_PATH}/vertex_attribute.h
 	${CORTO_HEADER_PATH}/zpoint.h
 	${CORTO_HEADER_PATH}/corto_decoder_c.h
-	${CORTO_SOURCE_PATH}/corto_codec.h)
+	${CORTO_SOURCE_PATH}/corto_codec.h
+	${CORTO_HEADER_PATH}/SimpleString.h
+	)
 
 SET(LIB_SOURCES
 	${CORTO_SOURCE_PATH}/bitstream.cpp
@@ -164,13 +166,13 @@ target_include_directories(corto PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(corto PRIVATE ${CORTO_HEADER_PATH})
 target_compile_definitions(corto PUBLIC ${CORTO_DEFINITIONS})
 target_compile_options    (corto PUBLIC ${CORTOLIB_CFLAGS})
-set_target_properties     (corto PROPERTIES DEBUG_POSTFIX "d")
+#set_target_properties     (corto PROPERTIES DEBUG_POSTFIX "d")
 
 target_include_directories(corto_dll PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(corto_dll PRIVATE ${CORTO_HEADER_PATH})
 target_compile_definitions(corto_dll PUBLIC ${CORTO_DEFINITIONS})
 target_compile_options    (corto_dll PUBLIC ${CORTOLIB_CFLAGS})
-set_target_properties     (corto_dll PROPERTIES DEBUG_POSTFIX "d")
+#set_target_properties     (corto_dll PROPERTIES DEBUG_POSTFIX "d")
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 	# G++
@@ -207,6 +209,7 @@ INSTALL(FILES
 	${CORTO_HEADER_PATH}/tunstall.h
 	${CORTO_HEADER_PATH}/vertex_attribute.h
 	${CORTO_HEADER_PATH}/zpoint.h
+	${CORTO_HEADER_PATH}/SimpleString.h
 	DESTINATION include/corto)
 
 if (BUILD_CORTO_CODEC_UNITY)

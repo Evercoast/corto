@@ -47,18 +47,20 @@ Decoder::Decoder(int len, const uchar *input): vertex_count(0) {
 	if(magic != 0x787A6300)
 		throw "Not a crt file.";
 	uint32_t version = stream.readUint32();
+    (void)version;// suppress warning
 	stream.entropy = (Stream::Entropy)stream.readUint8();
 
 	uint32_t size = stream.readUint32();
 	for(uint32_t i = 0; i < size; i++) {
-		const char *key = stream.readString();
-		exif[key] = stream.readString();
+		SimpleString key = SimpleString(stream.readString());
+        SimpleString val = SimpleString(stream.readString());
+        exif[key] = val;
 	}
 
 	int nattr = stream.readUint32();
 
 	for(int i = 0; i < nattr; i++) {
-		std::string name =  stream.readString();
+		SimpleString name =  stream.readString();
 		int codec = stream.readUint32();
 		float q = stream.readFloat();
 		uint32_t components = stream.readUint8();
@@ -78,6 +80,7 @@ Decoder::Decoder(int len, const uchar *input): vertex_count(0) {
 		attr->q = q;
 		attr->format = (VertexAttribute::Format)format;
 		attr->strategy = strategy;
+
 		data[name] = attr;
 	}
 	nvert = stream.readUint32();

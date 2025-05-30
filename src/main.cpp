@@ -178,13 +178,26 @@ int main(int argc, char *argv[]) {
 
 	crt::Encoder encoder(loader.nvert, loader.nface, crt::Stream::TUNSTALL);
 
-	encoder.exif = loader.exif;
+    for(auto& pair : loader.exif)
+    {
+        SimpleString key = SimpleString(pair.first.c_str());
+        SimpleString val = SimpleString(pair.second.c_str());
+        encoder.exif[key] = val;
+    }
+	//encoder.exif = loader.exif;
 	//add and override exif properties
 	for(auto it: exif)
-		encoder.exif[it.first] = it.second;
+		encoder.exif[SimpleString(it.first.c_str())] = SimpleString(it.second.c_str());
 
 	for(auto &g: loader.groups)
-		encoder.addGroup(g.end, g.properties);
+    {
+        std::map<SimpleString, SimpleString> properties;
+        for(auto& prop: g.properties)
+        {
+            properties[SimpleString(prop.first.c_str())] = SimpleString(prop.second.c_str());
+        }
+        encoder.addGroup(g.end, properties);
+    }
 
 	if(pointcloud) {
 		if(vertex_bits)
